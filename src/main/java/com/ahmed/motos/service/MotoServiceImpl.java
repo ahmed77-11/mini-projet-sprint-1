@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.ahmed.motos.entities.Model;
 import com.ahmed.motos.entities.Moto;
 import com.ahmed.motos.repos.MotoRepository;
 
@@ -50,6 +51,41 @@ public class MotoServiceImpl implements MotoService {
 	public Page<Moto> getAllMotosParPage(int page,int size){
 		return motoRepository.findAll(PageRequest.of(page, size));
 		
+	}
+
+	@Override
+	public List<Moto> findByNomMoto(String nom) {
+		return motoRepository.findByNomMoto(nom);
+	}
+
+	@Override
+	public List<Moto> findByNomMotoContains(String nom) {
+		return motoRepository.findByNomMotoContains(nom);
+	}
+
+	@Override
+	public List<Moto> findByNomPrix(String nom, Double prix) {
+		return motoRepository.findByNomPrix(nom, prix);
+	}
+
+	@Override
+	public List<Moto> findByModel(Model model){
+		return motoRepository.findByModel(model);
+	}
+
+	@Override
+	public List<Moto> findByModelIdMod(Long id) {
+		return motoRepository.findByModelIdModel(id);
+	}
+
+	@Override
+	public List<Moto> findByOrderByNomMotoAsc() {
+		return motoRepository.findByOrderByNomMotoAsc();
+	}
+
+	@Override
+	public List<Moto> trierMotosNomsPrix() {
+		return motoRepository.trierMotosNomsPrix();
 	}
 
 }

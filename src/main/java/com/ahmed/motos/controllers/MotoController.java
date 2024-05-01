@@ -35,7 +35,7 @@ public class MotoController {
 
 	@RequestMapping("/showCreate")
 	public String showCreate() {
-		return "createMoto.html";
+		return "createMoto";
 	}
 
 	@RequestMapping("/saveMoto")
@@ -47,7 +47,7 @@ public class MotoController {
 		Moto saveMoto = motoService.saveMoto(moto);
 		String msg = "Moto enregistré avec Id " + saveMoto.getIdMoto();
 		modelMap.addAttribute("msg", msg);
-		return "createMoto.html";
+		return "createMoto";
 	}
 
 	@RequestMapping("/supprimerMoto")
@@ -66,7 +66,7 @@ public class MotoController {
 	public String editerProduit(@RequestParam("id") Long id, ModelMap modelMap) {
 		Moto m = motoService.getMoto(id);
 		modelMap.addAttribute("moto", m);
-		return "editerMoto.html";
+		return "editerMoto";
 	}
 
 	@RequestMapping("/updateMoto")
@@ -75,11 +75,10 @@ public class MotoController {
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateCreation = dateformat.parse(String.valueOf(date));
 		moto.setDateCreation(dateCreation);
-
 		motoService.updateMoto(moto);
 		List<Moto> motos = motoService.getAllMotos();
 		modelMap.addAttribute("motos", motos);
-		return "listeMotos.html";
+		return "listeMotos";
 	}
 	
 

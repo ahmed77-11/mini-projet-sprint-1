@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.TemplateEngine;
@@ -24,16 +25,14 @@ import org.thymeleaf.templatemode.TemplateMode;
 public class MotosApplication implements CommandLineRunner{
 	
 	@Autowired
-	MotoService motoService;
+	private RepositoryRestConfiguration repositoryRestConfiguration;
 
 	public static void main(String[] args) {
 		SpringApplication.run(MotosApplication.class, args);
 	}
 	@Override
 	public void run(String... args) throws Exception {
-		motoService.saveMoto(new Moto("BMW",2444.4,new Date()));
-		motoService.saveMoto(new Moto("KAWAZAKI",1004.4,new Date()));
-		motoService.saveMoto(new Moto("HONDA",3000.4,new Date()));
+		repositoryRestConfiguration.exposeIdsFor(Moto.class);
 		
 	}
 	/*
