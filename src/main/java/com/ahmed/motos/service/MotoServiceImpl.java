@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ahmed.motos.entities.Model;
 import com.ahmed.motos.entities.Moto;
+import com.ahmed.motos.repos.ModelRepository;
 import com.ahmed.motos.repos.MotoRepository;
 
 @Service
@@ -16,6 +17,9 @@ public class MotoServiceImpl implements MotoService {
 	
 	@Autowired
 	MotoRepository motoRepository;
+	
+	@Autowired
+	ModelRepository modelRepository;
 
 	@Override
 	public Moto saveMoto(Moto m) {
@@ -86,6 +90,11 @@ public class MotoServiceImpl implements MotoService {
 	@Override
 	public List<Moto> trierMotosNomsPrix() {
 		return motoRepository.trierMotosNomsPrix();
+	}
+
+	@Override
+	public List<Model> getAllModels() {
+		return modelRepository.findAll();
 	}
 
 }

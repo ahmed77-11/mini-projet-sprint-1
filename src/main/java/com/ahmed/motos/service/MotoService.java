@@ -22,6 +22,7 @@ public interface MotoService {
 	List<Moto> findByModelIdMod(Long id);
 	List<Moto> findByOrderByNomMotoAsc();
 	List<Moto> trierMotosNomsPrix();
+	List<Model> getAllModels();
 	
 	
 }

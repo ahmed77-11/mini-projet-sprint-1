@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.ahmed.motos.entities.Model;
 import com.ahmed.motos.entities.Moto;
 import com.ahmed.motos.service.MotoService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class MotoController {
@@ -34,20 +38,19 @@ public class MotoController {
 	}
 
 	@RequestMapping("/showCreate")
-	public String showCreate() {
-		return "createMoto";
+	public String showCreate(ModelMap modelMap) {
+		List<Model> models=motoService.getAllModels();
+		modelMap.addAttribute("moto", new Moto());
+		modelMap.addAttribute("mode", "new");
+		modelMap.addAttribute("models",models);
+		return "formMoto";
 	}
 
 	@RequestMapping("/saveMoto")
-	public String saveMoto(@ModelAttribute("moto") Moto moto, @RequestParam("date") String date, ModelMap modelMap) throws ParseException {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateCreation = dateformat.parse(String.valueOf(date));
-		moto.setDateCreation(dateCreation);
-
-		Moto saveMoto = motoService.saveMoto(moto);
-		String msg = "Moto enregistré avec Id " + saveMoto.getIdMoto();
-		modelMap.addAttribute("msg", msg);
-		return "createMoto";
+	public String saveMoto(@ModelAttribute("moto") @Valid Moto moto,BindingResult bindingResult){
+		if (bindingResult.hasErrors()) return "formMoto";
+		 motoService.saveMoto(moto);
+		 return ("redirect:/ListeMotos");
 	}
 
 	@RequestMapping("/supprimerMoto")
@@ -65,7 +68,10 @@ public class MotoController {
 	@RequestMapping("/modifierMoto")
 	public String editerProduit(@RequestParam("id") Long id, ModelMap modelMap) {
 		Moto m = motoService.getMoto(id);
+		List<Model> models=motoService.getAllModels();
 		modelMap.addAttribute("moto", m);
+		modelMap.addAttribute("mode", "edit");
+		modelMap.addAttribute("models",models);
 		return "editerMoto";
 	}
 
@@ -80,6 +86,6 @@ public class MotoController {
 		modelMap.addAttribute("motos", motos);
 		return "listeMotos";
 	}
-	
+
 
 }
