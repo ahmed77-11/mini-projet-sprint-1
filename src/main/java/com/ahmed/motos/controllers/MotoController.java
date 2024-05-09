@@ -28,33 +28,51 @@ public class MotoController {
 	MotoService motoService;
 
 	@RequestMapping("/ListeMotos")
-	public String listeMotos(ModelMap modelMap,@RequestParam (name="page",defaultValue = "0") int page,@RequestParam (name="size", defaultValue = "5") int size) {
-		Page<Moto> motos =motoService.getAllMotosParPage(page, size);
+	public String listeMotos(ModelMap modelMap, @RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "5") int size) {
+		Page<Moto> motos = motoService.getAllMotosParPage(page, size);
 		modelMap.addAttribute("motos", motos);
 		modelMap.addAttribute("pages", new int[motos.getTotalPages()]);
 		modelMap.addAttribute("currentPage", page);
-		
+
 		return "listeMotos";
 	}
 
 	@RequestMapping("/showCreate")
 	public String showCreate(ModelMap modelMap) {
-		List<Model> models=motoService.getAllModels();
+		List<Model> models = motoService.getAllModels();
 		modelMap.addAttribute("moto", new Moto());
 		modelMap.addAttribute("mode", "new");
-		modelMap.addAttribute("models",models);
+		modelMap.addAttribute("models", models);
 		return "formMoto";
 	}
 
 	@RequestMapping("/saveMoto")
-	public String saveMoto(@ModelAttribute("moto") @Valid Moto moto,BindingResult bindingResult){
-		if (bindingResult.hasErrors()) return "formMoto";
-		 motoService.saveMoto(moto);
-		 return ("redirect:/ListeMotos");
+	public String saveMoto(@ModelAttribute("moto") @Valid Moto moto, BindingResult bindingResult,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "5") int size) {
+		int currentPage;
+		boolean isNew = false;
+		if (bindingResult.hasErrors())
+			return "formMoto";
+		if (moto.getIdMoto()==null) //ajout
+			isNew=true;
+		motoService.saveMoto(moto);
+		if (isNew) //ajout
+		{
+		Page<Moto> motos = motoService.getAllMotosParPage(page, size);
+		currentPage = motos.getTotalPages()-1;
+		}
+		else { //modif
+		currentPage=page;
+		}
+		return ("redirect:/ListeMotos?page="+currentPage+"&size="+size);
 	}
 
 	@RequestMapping("/supprimerMoto")
-	public String supprimerMoto(@RequestParam("id") Long id, ModelMap modelMap,@RequestParam (name="page",defaultValue = "0") int page,@RequestParam (name="size", defaultValue = "5") int size) {
+	public String supprimerMoto(@RequestParam("id") Long id, ModelMap modelMap,
+			@RequestParam(name = "page", defaultValue = "0") int page,
+			@RequestParam(name = "size", defaultValue = "5") int size) {
 		motoService.deleteMotoById(id);
 		Page<Moto> motos = motoService.getAllMotosParPage(page, size);
 		modelMap.addAttribute("motos", motos);
@@ -68,11 +86,11 @@ public class MotoController {
 	@RequestMapping("/modifierMoto")
 	public String editerProduit(@RequestParam("id") Long id, ModelMap modelMap) {
 		Moto m = motoService.getMoto(id);
-		List<Model> models=motoService.getAllModels();
+		List<Model> models = motoService.getAllModels();
 		modelMap.addAttribute("moto", m);
 		modelMap.addAttribute("mode", "edit");
-		modelMap.addAttribute("models",models);
-		return "editerMoto";
+		modelMap.addAttribute("models", models);
+		return "formMoto";
 	}
 
 	@RequestMapping("/updateMoto")
@@ -86,6 +104,8 @@ public class MotoController {
 		modelMap.addAttribute("motos", motos);
 		return "listeMotos";
 	}
-
-
+	@GetMapping(value = "/")
+	public String welcome() {
+	 return "index";
+	}
 }

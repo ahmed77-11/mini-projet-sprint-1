@@ -15,49 +15,52 @@
 			<div class="card-header" th:if="${mode=='edit'}">Modification des Motos </div>
 			<div class="card-body">
 				<form th:action="@{saveMoto}" method="post">
+					<input hidden name="page" class="form-control" th:value="${page}" />
+					<input hidden name="size" class="form-control" th:value="${size}" />
+					
 					<div class="form-group">
 						<label class="control-label" hidden>ID Moto :</label>
 						<input type="hidden" name="idMoto" class="form-control" th:value="${moto.idMoto}" />
 					</div>
-					<form th:action="@{saveMoto}" method="post">
-						<div class="form-group">
-							<label class="control-label">Nom Moto :</label>
-							<input type="text" name="nomMoto" class="form-control" />
-							<span th:errors=${moto.nomMoto} class="text-danger"> </span>
-						</div>
-						<div class="form-group">
-							<label class="control-label">Prix Moto :</label>
-							<input type="text" name="prixMoto" class="form-control" />
-							<span th:errors=${moto.prixMoto} class="text-danger"> </span>
+					<div class="form-group">
+						<label class="control-label">Nom Moto :</label>
+						<input type="text" name="nomMoto" class="form-control" th:value="${moto.nomMoto}" />
+						<span th:errors=${moto.nomMoto} class="text-danger"> </span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">Prix Moto :</label>
+						<input type="text" name="prixMoto" class="form-control" th:value="${moto.prixMoto}" />
+						<span th:errors=${moto.prixMoto} class="text-danger"> </span>
+					</div>
+					<div class="form-group">
+						<label class="control-label">date création :</label>
+						<input type="date" name="dateCreation" class="form-control" th:value="${moto.dateCreation}" />
+						<span th:errors=${moto.dateCreation} class="text-danger"> </span>
+					</div>
 
-						</div>
-						<div class="form-group">
-							<label class="control-label">date création :</label>
-							<input type="date" name="dateCreation" class="form-control" />
-							<span th:errors=${moto.dateCreation} class="text-danger"> </span>
+					<div class="form-group">
+						<label class="control-label">Model :</label>
+						<select name="model" class="form-control" th:value="${moto.model.idModel}"
+							th:if="${!#strings.isEmpty(moto.model)}">
+							<option th:each="c:${models}" th:if="${mode=='edit'}" th:value="${c.idModel}"
+								th:text="${c.nomModel}" th:selected="${ c.idModel==moto.model.idModel}">
+							</option>
+						</select>
+						<!-- s'il s'agit d'un ajout (mode==new) ou d'une modification d'un produit ayant une catégorie null -->
+						<select name="model" class="form-control" th:if="${#strings.isEmpty(moto.model)}">
+							<option th:each="c:${models}" th:value="${c.idModel}" th:text="${c.nomModel}"></option>
+						</select>
+					</div>
 
-						</div>
-						<div class="form-group">
-							<label class="control-label">Model :</label>
-							<select name="model" class="form-control" th:value="${moto.model.idModel}"
-								th:if="${!#strings.isEmpty(moto.model)}">
-								<option th:each="c:${models}" th:if="${mode=='edit'}" th:value="${c.idModel}"
-									th:text="${c.nomModel}" th:selected="${ c.idModel==moto.model.idModel}">
-								</option>
-							</select>
-							<select name="model" class="form-control"
-								th:if="${#strings.isEmpty(moto.model)}">
-								<option th:each="c:${models}" th:value="${c.idModel}" th:text="${c.nomModel}">
-								</option>
-							</select>
-						</div>
-						<div>
-							<button type="submit" class="btn btn-primary">Valider</button>
-						</div>
-					</form>
+
+					<div>
+						<button type="submit" class="btn btn-primary">Valider</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+
 </body>
 
 </html>
